@@ -1,0 +1,96 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f2f2f2;
+}
+
+header {
+  background: #4a90e2;
+  display: flex;
+  justify-content: space-around;
+}
+
+header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+  padding: 0 42px;
+  color: #fff;
+  min-width: 980px;
+  font-size: 14px;
+}
+
+header img{
+  height: 24px;
+}
+
+nav > span {
+  font-size: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+nav > div {
+  display: flex;
+  align-items: center;
+}
+
+nav > div i {
+  margin-left: 8px;
+}
+
+section{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post{
+  width: 700px;
+  margin: 25px 0 0 0 ;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: self-start;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 0px 13px 0px rgba(50, 50, 50, 0.32);
+  -moz-box-shadow:    0px 0px 13px 0px rgba(50, 50, 50, 0.32);
+  box-shadow:         0px 0px 13px 0px rgba(50, 50, 50, 0.32);
+}
+
+.post > .headerPost{
+  padding: 20px 0 5px 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.post > .headerPost .author{
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 0 10px;
+}
+
+.post > .headerPost .author small{
+  color: grey;
+}
+
+.post .avatar img{
+  width: 40px;
+  border-radius: 100px;  
+}
+
+.post article{
+  padding: 10px 20px 20px 20px;
+}
