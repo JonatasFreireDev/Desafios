@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PostComment from './PostComment';
 
 class Post extends Component{
 
@@ -15,7 +16,8 @@ class Post extends Component{
           </div>
         </div>
         <article>
-          <p>Some text</p>
+          <p>{this.props.data.content}</p>
+          {this.props.data.comments.map(coment => <PostComment key={coment.id} data={coment}/>)}
         </article>
       </div>
     )

@@ -14,12 +14,15 @@ body,
 body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f2f2f2;
+  font-size: 14px;
+  color: #00000099;
 }
 
 header {
   background: #4a90e2;
   display: flex;
   justify-content: space-around;
+  margin-bottom: 30px;
 }
 
 header nav {
@@ -59,7 +62,7 @@ section{
 
 .post{
   width: 700px;
-  margin: 25px 0 0 0 ;
+  margin: 0 0 30px 0 ;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -83,14 +86,28 @@ section{
 }
 
 .post > .headerPost .author small{
+  padding: 3px 0 3px 0;
   color: grey;
 }
 
-.post .avatar img{
+.post .avatar img, .comment img{
   width: 40px;
   border-radius: 100px;  
 }
 
 .post article{
   padding: 10px 20px 20px 20px;
+  line-height: 170%;
+}
+
+.comment{
+  margin-top: 15px;
+  display: flex;
+}
+
+.comment .textComment{
+  padding: 15px;
+  margin: 0 20px 0 20px;
+  border-radius: 30px;
+  background: #97979715;
 }
