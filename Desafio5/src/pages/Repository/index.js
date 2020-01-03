@@ -1,27 +1,57 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { FaSpinner } from 'react-icons/fa';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, IssueList } from './styles';
+import Loader from '../../components/Loader';
+
+import { Owner, IssueList, Button, deuErro, ConfigIssue } from './styles';
 
 export default class Repository extends Component {
-  static propTypes = {
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        repository: PropTypes.string,
-      }),
-    }).isRequired,
-  };
-
   state = {
     repository: {},
     issues: [],
     loading: true,
+    error: false,
+    filter: [
+      { state: 'all', name: 'Todos' },
+      { state: 'open', name: 'Abertos' },
+      { state: 'closed', name: 'Fechados' },
+    ],
+    stateIssue: 'all',
   };
 
   async componentDidMount() {
+    try {
+      const { match } = this.props;
+      const repoName = decodeURIComponent(match.params.repository);
+
+      const [repository, issues] = await Promise.all([
+        api.get(`/repos/${repoName}`),
+        api.get(`/repos/${repoName}/issues`, {
+          params: {
+            state: 'all',
+            per_page: 5,
+          },
+        }),
+      ]);
+
+      this.setState({
+        repository: repository.data,
+        issues: issues.data,
+        loading: false,
+      });
+    } catch (err) {
+      this.setState({
+        loading: false,
+        error: true,
+      });
+    }
+  }
+
+  changeStateIssue = async stateIssue => {
     const { match } = this.props;
     const repoName = decodeURIComponent(match.params.repository);
 
@@ -29,7 +59,7 @@ export default class Repository extends Component {
       api.get(`/repos/${repoName}`),
       api.get(`/repos/${repoName}/issues`, {
         params: {
-          state: 'open',
+          state: stateIssue,
           per_page: 5,
         },
       }),
@@ -39,13 +69,34 @@ export default class Repository extends Component {
       repository: repository.data,
       issues: issues.data,
       loading: false,
+      stateIssue,
     });
-  }
+  };
 
   render() {
-    const { repository, issues, loading } = this.state;
+    const {
+      repository,
+      issues,
+      loading,
+      error,
+      filter,
+      stateIssue,
+    } = this.state;
+
     if (loading) {
-      return <Loading>Carregando</Loading>;
+      return (
+        <Loader>
+          <FaSpinner />
+        </Loader>
+      );
+    }
+
+    if (error) {
+      return (
+        <deuErro>
+          Provavelmente, o limite de requisições ja foram atingidos
+        </deuErro>
+      );
     }
 
     return (
@@ -57,6 +108,16 @@ export default class Repository extends Component {
           <p>{repository.description}</p>
         </Owner>
         <IssueList>
+          <ConfigIssue>
+            {filter.map(filt => (
+              <Button
+                onClick={() => this.changeStateIssue(`${filt.state}`)}
+                className={stateIssue === filt.state ? 'active' : ''}
+              >
+                {filt.name}
+              </Button>
+            ))}
+          </ConfigIssue>
           {issues.map(issue => (
             <li key={String(issue.id)}>
               <img src={issue.user.avatar_url} alt={issue.user.login} />
@@ -76,3 +137,11 @@ export default class Repository extends Component {
     );
   }
 }
+
+Repository.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      repository: PropTypes.string,
+    }),
+  }).isRequired,
+};
