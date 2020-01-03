@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
+
+import { MdClose, MdChevronRight } from 'react-icons/md';
+
 import { Link } from 'react-router-dom';
 import Container from '../../components/Container';
 import { Form, SubimitButton, List } from './styles';
@@ -12,6 +15,10 @@ export default class Main extends Component {
     newRepo: '',
     repositories: [],
     loading: false,
+    inputForm: {
+      message: 'Nome do repositório',
+      error: false,
+    },
   };
 
   componentDidMount() {
@@ -39,21 +46,63 @@ export default class Main extends Component {
     this.setState({ loading: true });
 
     const { newRepo, repositories } = this.state;
-    const response = await api.get(`/repos/${newRepo}`);
 
-    const data = {
-      name: response.data.full_name,
-    };
+    const isRep = repositories.find(
+      repositorie => repositorie.name === newRepo
+    );
+
+    try {
+      if (isRep) {
+        throw new Error('Repositório duplicado');
+      }
+
+      const response = await api.get(`/repos/${newRepo}`);
+
+      const data = {
+        name: response.data.full_name,
+        image: response.data.owner.avatar_url,
+      };
+
+      this.setState({
+        repositories: [...repositories, data],
+        newRepo: '',
+        loading: false,
+        inputForm: {
+          error: false,
+          message: `${data.name} foi adicionado com sucesso`,
+        },
+      });
+    } catch (error) {
+      this.setState({
+        newRepo: '',
+        loading: false,
+        inputForm: {
+          error: true,
+          message: error.message,
+        },
+      });
+    }
+  };
+
+  handleDelete = repository => {
+    const { repositories } = this.state;
 
     this.setState({
-      repositories: [...repositories, data],
-      newRepo: '',
-      loading: false,
+      repositories: repositories.filter(repo => repo !== repository),
+      inputForm: {
+        message: `${repository.name} foi deletado com sucesso`,
+      },
     });
   };
 
   render() {
-    const { newRepo, repositories, loading } = this.state;
+    const {
+      newRepo,
+      repositories,
+      loading,
+      inputForm: { message, error },
+    } = this.state;
+
     return (
       <Container>
         <h1>
@@ -61,10 +110,10 @@ export default class Main extends Component {
           Repositórios
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit} error={error}>
           <input
             type="text"
-            placeholder="Adicionar repositório"
+            placeholder={message}
             value={newRepo}
             onChange={this.handleInputChange}
           />
@@ -80,10 +129,19 @@ export default class Main extends Component {
         <List>
           {repositories.map(repository => (
             <li key={repository.name}>
-              <span>{repository.name}</span>
-              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
-                Detalhes
-              </Link>
+              <div>
+                <img src={repository.image} alt="" />
+                <span>{repository.name}</span>
+              </div>
+              <div>
+                <MdClose
+                  className="delete"
+                  onClick={() => this.handleDelete(repository)}
+                />
+                <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
+                  <MdChevronRight className="next" />
+                </Link>
+              </div>
             </li>
           ))}
         </List>
