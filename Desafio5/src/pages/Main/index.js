@@ -58,6 +58,10 @@ export default class Main extends Component {
         throw new Error('Repositório duplicado');
       }
 
+      if (!newRepo) {
+        throw new Error('Insira um repositório');
+      }
+
       const response = await api.get(`/repos/${newRepo}`);
 
       const data = {

@@ -89,6 +89,12 @@ export const IssueList = styled.ul`
       }
     }
   }
+
+  .pag {
+    display: flex;
+    margin-top: 30px;
+    justify-content: space-between;
+  }
 `;
 
 export const Button = styled.button.attrs({
@@ -112,6 +118,13 @@ export const Button = styled.button.attrs({
     color: white;
     border: 1px solid grey;
   }
+
+  &[disabled] {
+    background: white;
+    border: 1px solid grey;
+    color: grey;
+    cursor: not-allowed;
+  }
 `;
 
 export const ConfigIssue = styled.div`
@@ -122,7 +135,7 @@ export const ConfigIssue = styled.div`
   justify-content: center;
 `;
 
-export const deuErro = styled.div`
+export const DeuErro = styled.div`
   width: 100vw;
   height: 100vh;
   color: white;
@@ -130,4 +143,15 @@ export const deuErro = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+
+  p {
+    padding: 15px;
+  }
+
+  a {
+    color: grey;
+    font-size: 16px;
+    text-decoration: none;
+  }
 `;

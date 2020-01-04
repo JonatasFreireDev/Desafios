@@ -7,7 +7,7 @@ import api from '../../services/api';
 import Container from '../../components/Container';
 import Loader from '../../components/Loader';
 
-import { Owner, IssueList, Button, deuErro, ConfigIssue } from './styles';
+import { Owner, IssueList, Button, DeuErro, ConfigIssue } from './styles';
 
 export default class Repository extends Component {
   state = {
@@ -21,6 +21,7 @@ export default class Repository extends Component {
       { state: 'closed', name: 'Fechados' },
     ],
     stateIssue: 'all',
+    pageIssue: 1,
   };
 
   async componentDidMount() {
@@ -51,7 +52,7 @@ export default class Repository extends Component {
     }
   }
 
-  changeStateIssue = async stateIssue => {
+  changeStateIssue = async (stateIssue, navigation = 1) => {
     const { match } = this.props;
     const repoName = decodeURIComponent(match.params.repository);
 
@@ -61,6 +62,7 @@ export default class Repository extends Component {
         params: {
           state: stateIssue,
           per_page: 5,
+          page: navigation,
         },
       }),
     ]);
@@ -69,6 +71,7 @@ export default class Repository extends Component {
       repository: repository.data,
       issues: issues.data,
       loading: false,
+      pageIssue: navigation,
       stateIssue,
     });
   };
@@ -81,6 +84,7 @@ export default class Repository extends Component {
       error,
       filter,
       stateIssue,
+      pageIssue,
     } = this.state;
 
     if (loading) {
@@ -93,9 +97,11 @@ export default class Repository extends Component {
 
     if (error) {
       return (
-        <deuErro>
-          Provavelmente, o limite de requisições ja foram atingidos
-        </deuErro>
+        <DeuErro>
+          <p>Provavelmente, o limite de requisições ja foi atingido</p>
+          <p>Tente novamente após 1 hora</p>
+          <Link to="/">Voltar aos repositórios</Link>
+        </DeuErro>
       );
     }
 
@@ -132,6 +138,23 @@ export default class Repository extends Component {
               </div>
             </li>
           ))}
+          <div className="pag">
+            <Button
+              onClick={() => {
+                this.changeStateIssue(stateIssue, pageIssue - 1);
+              }}
+              disabled={pageIssue === 1}
+            >
+              Anterior
+            </Button>
+            <Button
+              onClick={() => {
+                this.changeStateIssue(stateIssue, pageIssue + 1);
+              }}
+            >
+              Proximo
+            </Button>
+          </div>
         </IssueList>
       </Container>
     );

@@ -24,7 +24,6 @@ export const Form = styled.form`
       input {
         border: 1px solid red;
         box-shadow: 0px 0px 10px -2px rgba(255, 0, 0, 1);
-        color: red;
       }
     `}
 `;
