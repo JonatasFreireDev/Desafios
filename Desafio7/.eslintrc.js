@@ -28,5 +28,6 @@ module.exports = {
       ],
       'no-console': ['error', { allow: ['tron'] }],
       'import/prefer-default-export': 'off',
+      'react/jsx-boolean-value': ['off'],
    },
 };
