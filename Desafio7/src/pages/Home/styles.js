@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { darken } from 'polished';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Carousel from 'react-native-snap-carousel';
+import { RectButton } from 'react-native-gesture-handler';
 
 export const View = styled.View`
    margin: 0;
@@ -11,21 +13,20 @@ export const View = styled.View`
    background: ${darken(0.2, '#7159c1')};
 `;
 
-export const List = styled.FlatList.attrs({
+export const List = styled(Carousel).attrs({
    showsVerticalScrollIndicator: false,
    horizontal: true,
-})`
-   margin: 10px -20px;
-   padding: 0px;
-`;
+   sliderWidth: 400,
+   itemWidth: 290,
+})``;
 
 export const ContItem = styled.View`
    background: #fff;
    padding: 10px;
    border-radius: 10px;
    margin: 0 10px;
-   height: 360px;
-   width: 250px;
+   height: 390px;
+   width: 280px;
 `;
 
 export const Img = styled.Image`
@@ -38,7 +39,7 @@ export const Texto = styled.Text`
    margin: auto;
 `;
 
-export const MainButton = styled.TouchableOpacity`
+export const MainButton = styled(RectButton)`
    align-items: center;
    flex-direction: row;
    background: #7159c1;
