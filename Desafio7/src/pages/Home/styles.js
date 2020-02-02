@@ -16,8 +16,8 @@ export const View = styled.View`
 export const List = styled(Carousel).attrs({
    showsVerticalScrollIndicator: false,
    horizontal: true,
-   sliderWidth: 400,
-   itemWidth: 290,
+   sliderWidth: 410,
+   itemWidth: 300,
 })``;
 
 export const ContItem = styled.View`

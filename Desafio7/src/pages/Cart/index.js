@@ -23,8 +23,17 @@ import {
 
 export default class Cart extends Component {
    state = {
-      teste: true,
+      listProducts: [],
    };
+
+   componentDidMount() {
+      const { listProducts } = this.state;
+      const { item } = this.props.navigation.state.params;
+
+      this.setState({ listProducts: [...listProducts, item] });
+      console.tron.log(this.state);
+      console.tron.log(item);
+   }
 
    static navigationOptions = {
       title: 'Cart',
