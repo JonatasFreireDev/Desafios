@@ -4,6 +4,31 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Carousel from 'react-native-snap-carousel';
 import { RectButton } from 'react-native-gesture-handler';
 
+export const Error = styled.View`
+   height: 100%;
+   justify-content: center;
+   align-items: center;
+`;
+
+export const TextError = styled.Text`
+   font-size: 16px;
+   color: white;
+   padding: 8px;
+   margin: 0 50px;
+`;
+
+export const IconError = styled(Icon).attrs({
+   name: 'block',
+   size: 100,
+   color: '#FFF',
+})``;
+
+export const ViewLoading = styled.View`
+   height: 100%;
+   justify-content: center;
+   align-items: center;
+`;
+
 export const View = styled.View`
    margin: 0;
    padding: 10px 20px;

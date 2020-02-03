@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
+import { ActivityIndicator } from 'react-native';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import * as CartActions from '../../store/Modules/Cart/actions';
 import { Container } from '../../components/Container/styles';
 import {
+   Error,
+   TextError,
+   IconError,
+   ViewLoading,
    View,
    List,
    ContItem,
@@ -11,10 +20,9 @@ import {
    Shadow,
    White,
 } from './styles';
-
 import api from '../../services/api';
 
-export default class Home extends Component {
+class Home extends Component {
    state = {
       products: [],
       isLoading: false,
@@ -32,32 +40,54 @@ export default class Home extends Component {
       this.setState({ isLoading: true });
 
       try {
-         const response = await api.get('/products/').catch(err => {
-            this.setState({
-               error: {
-                  err: true,
-                  message: err.message,
-               },
-            });
+         const response = await api.get('/products').catch(err => {
+            throw new Error(
+               'Não foi possivel Realizar a consulta dos produtos'
+            );
          });
 
          this.setState({
             products: response.data,
             isLoading: false,
          });
-      } catch (err) {}
+      } catch (e) {
+         this.setState({
+            error: {
+               err: true,
+               message: e.message,
+            },
+         });
+      }
    };
 
    render() {
-      const { navigation } = this.props;
-      const { products, isLoading, error: err } = this.state;
+      const { addToCartSuccess } = this.props;
+      const {
+         products,
+         isLoading,
+         error: { err, message },
+      } = this.state;
+
+      console.tron.log(message);
+
+      if (err) {
+         return (
+            <Container>
+               <Error>
+                  <IconError />
+                  <TextError>Erro..</TextError>
+                  <TextError>{message}</TextError>
+               </Error>
+            </Container>
+         );
+      }
 
       return (
          <Container>
             {isLoading ? (
-               <>
-                  <Texto>Carregando..</Texto>
-               </>
+               <ViewLoading>
+                  <ActivityIndicator color="#FFF" size={50} />
+               </ViewLoading>
             ) : (
                <List
                   data={products}
@@ -72,8 +102,7 @@ export default class Home extends Component {
                         <MainButton
                            style={Shadow}
                            onPress={() => {
-                              this.loadProducts();
-                              navigation.navigate('Cart', { item });
+                              addToCartSuccess(item);
                            }}
                         >
                            <View style={{ fontWeight: 'bold', color: '#fff' }}>
@@ -90,3 +119,14 @@ export default class Home extends Component {
       );
    }
 }
+
+const mapDispatchToProps = dispatch =>
+   bindActionCreators(CartActions, dispatch);
+
+export default connect(null, CartActions)(Home);
+
+Home.propTypes = {
+   navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+   }).isRequired,
+};

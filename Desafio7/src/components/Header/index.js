@@ -1,9 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { TouchableOpacity } from 'react-native';
+import PropTypes from 'prop-types';
+import * as CartActions from '../../store/Modules/Cart/actions';
 import { Container, Logo, Icone, LogoButton, Dot } from './styles';
 
-export default function Header({ navigation }) {
+function Header({ navigation, CartLength }) {
    return (
       <Container>
          <LogoButton
@@ -20,7 +23,7 @@ export default function Header({ navigation }) {
             }}
          >
             <Icone />
-            {1 > 0 ? <Dot>3</Dot> : null}
+            {CartLength > 0 ? <Dot>{CartLength}</Dot> : null}
          </TouchableOpacity>
       </Container>
    );
@@ -31,3 +34,12 @@ Header.propTypes = {
       navigate: PropTypes.func,
    }).isRequired,
 };
+
+const mapStateToProps = state => ({
+   CartLength: state.cart.length,
+});
+
+const mapDispatchToProps = dispatch =>
+   bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, CartActions)(Header);
