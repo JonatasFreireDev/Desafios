@@ -1,29 +1,31 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, SafeAreaView } from 'react-native';
 import PropTypes from 'prop-types';
 import { Container, Logo, Icone, LogoButton, Dot } from './styles';
 
 function Header({ navigation, CartLength }) {
    return (
-      <Container>
-         <LogoButton
-            onPress={() => {
-               navigation.navigate('Home');
-            }}
-         >
-            <Logo />
-         </LogoButton>
+      <SafeAreaView>
+         <Container>
+            <LogoButton
+               onPress={() => {
+                  navigation.navigate('Home');
+               }}
+            >
+               <Logo />
+            </LogoButton>
 
-         <TouchableOpacity
-            onPress={() => {
-               navigation.navigate('Cart');
-            }}
-         >
-            <Icone />
-            {CartLength > 0 ? <Dot>{CartLength}</Dot> : null}
-         </TouchableOpacity>
-      </Container>
+            <TouchableOpacity
+               onPress={() => {
+                  navigation.navigate('Cart');
+               }}
+            >
+               <Icone />
+               {CartLength > 0 ? <Dot>{CartLength}</Dot> : null}
+            </TouchableOpacity>
+         </Container>
+      </SafeAreaView>
    );
 }
 
