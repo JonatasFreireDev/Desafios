@@ -39,7 +39,4 @@ const mapStateToProps = state => ({
    CartLength: state.cart.length,
 });
 
-const mapDispatchToProps = dispatch =>
-   bindActionCreators(CartActions, dispatch);
-
-export default connect(mapStateToProps, CartActions)(Header);
+export default connect(mapStateToProps)(Header);

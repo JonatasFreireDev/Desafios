@@ -20,6 +20,7 @@ import {
    Shadow,
    White,
 } from './styles';
+import { formatPrice } from '../../util/format';
 import api from '../../services/api';
 
 class Home extends Component {
@@ -40,17 +41,19 @@ class Home extends Component {
       this.setState({ isLoading: true });
 
       try {
-         const response = await api.get('/products').catch(err => {
-            throw new Error(
-               'Não foi possivel Realizar a consulta dos produtos'
-            );
-         });
+         const response = await api.get('/products');
+
+         const data = response.data.map(product => ({
+            ...product,
+            formatedValue: formatPrice(product.price),
+         }));
 
          this.setState({
-            products: response.data,
+            products: data,
             isLoading: false,
          });
       } catch (e) {
+         console.tron.log(e);
          this.setState({
             error: {
                err: true,
@@ -61,21 +64,18 @@ class Home extends Component {
    };
 
    render() {
-      const { addToCartSuccess } = this.props;
+      const { addToCartRequest, amount } = this.props;
       const {
          products,
          isLoading,
          error: { err, message },
       } = this.state;
 
-      console.tron.log(message);
-
       if (err) {
          return (
             <Container>
                <Error>
                   <IconError />
-                  <TextError>Erro..</TextError>
                   <TextError>{message}</TextError>
                </Error>
             </Container>
@@ -97,17 +97,20 @@ class Home extends Component {
                         <Img source={{ uri: item.image }} />
                         <Texto>{item.title}</Texto>
                         <Texto style={{ fontWeight: 'bold' }}>
-                           {item.price}
+                           {item.formatedValue}
                         </Texto>
                         <MainButton
                            style={Shadow}
                            onPress={() => {
-                              addToCartSuccess(item);
+                              console.tron.log(this.props);
+                              addToCartRequest(item.id);
                            }}
                         >
                            <View style={{ fontWeight: 'bold', color: '#fff' }}>
                               <Icone />
-                              <Texto style={White}>2</Texto>
+                              <Texto style={White}>
+                                 {amount[item.id] || 0}
+                              </Texto>
                            </View>
                            <Texto style={White}>ADICIONAR</Texto>
                         </MainButton>
@@ -120,10 +123,17 @@ class Home extends Component {
    }
 }
 
+const mapStateToProps = state => ({
+   amount: state.cart.reduce((amount, product) => {
+      amount[product.id] = product.amount;
+      return amount;
+   }, {}),
+});
+
 const mapDispatchToProps = dispatch =>
    bindActionCreators(CartActions, dispatch);
 
-export default connect(null, CartActions)(Home);
+export default connect(mapStateToProps, CartActions)(Home);
 
 Home.propTypes = {
    navigation: PropTypes.shape({

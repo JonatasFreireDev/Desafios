@@ -2,17 +2,16 @@ import styled from 'styled-components';
 import { RectButton } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export const Products = styled.FlatList`
-   background: white;
-   border-radius: 5px;
-   padding: 15px;
-   margin: 0 20px;
+export const Products = styled.FlatList.attrs({
+   showsVerticalScrollIndicator: false,
+})`
+   height: 77%;
 `;
 
 export const CartView = styled.View`
    background: white;
    border-radius: 5px;
-   padding: 15px;
+   padding: 10px;
    margin: 0 20px;
 `;
 
@@ -34,6 +33,7 @@ export const ProductDescription = styled.View`
 export const ProductName = styled.Text``;
 
 export const ProductPrice = styled.Text`
+   font-size: 17px;
    margin-top: auto;
    font-weight: bold;
 `;
@@ -91,7 +91,7 @@ export const ProductMore = styled(Icon).attrs({
 `;
 
 export const Total = styled.View`
-   margin: 30px 0;
+   margin: 15px 0;
    align-items: center;
    justify-content: center;
 `;
@@ -108,8 +108,21 @@ export const TextButton = styled.Text`
 export const CheckoutButton = styled(RectButton)`
    width: 100%;
    color: #fff;
-   padding: 20px;
+   padding: 18px;
    border-radius: 5px;
    text-align: center;
    background: #7159c1;
+`;
+
+export const IconEmpty = styled(Icon).attrs({
+   name: 'add-shopping-cart',
+   size: 100,
+})`
+   padding: 15px;
+`;
+
+export const ContainerEmpty = styled.View`
+   justify-content: center;
+   align-items: center;
+   height: 100%;
 `;
