@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { Container } from '../../components/Container/styles';
 import {
    View,
@@ -115,3 +116,8 @@ const mapDispatchToProps = dispatch =>
    bindActionCreators(CartActions, dispatch);
 
 export default connect(mapStateToProps, CartActions)(Cart);
+
+Cart.propTypes = {
+   removeFromCart: PropTypes.func.isRequired,
+   updateAmountRequest: PropTypes.func.isRequired,
+};

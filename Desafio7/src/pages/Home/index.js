@@ -136,7 +136,5 @@ const mapDispatchToProps = dispatch =>
 export default connect(mapStateToProps, CartActions)(Home);
 
 Home.propTypes = {
-   navigation: PropTypes.shape({
-      navigate: PropTypes.func,
-   }).isRequired,
+   addToCartRequest: PropTypes.func.isRequired,
 };

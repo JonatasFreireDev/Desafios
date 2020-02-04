@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import * as CartActions from '../../store/Modules/Cart/actions';
 import { Container, Logo, Icone, LogoButton, Dot } from './styles';
 
 function Header({ navigation, CartLength }) {
