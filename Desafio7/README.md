@@ -14,4 +14,4 @@
   <li>Reactotron</li>
 </ul>
 
-<p><img style="max-height: 400px; margin: 5px 0 10px" src="git/app.gif" alt=""></p>
+<p><img width="350" src="git/app.gif" alt=""></p>
