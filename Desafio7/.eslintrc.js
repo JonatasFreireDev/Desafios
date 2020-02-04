@@ -30,5 +30,6 @@ module.exports = {
       'import/prefer-default-export': 'off',
       'react/jsx-boolean-value': ['off'],
       'react/no-unused-state': ['off'],
+      'no-param-reassign': 'off',
    },
 };
