@@ -5,8 +5,26 @@ export default function cart(state = [], action) {
       case '@cart/ADD_SUCCESS':
          return produce(state, draft => {
             const { product } = action;
-
             draft.push(product);
+         });
+      case '@cart/REMOVE':
+         return produce(state, draft => {
+            const productIndex = draft.findIndex(
+               product => product.id === action.id
+            );
+
+            if (productIndex >= 0) {
+               draft.splice(productIndex, 1);
+            }
+         });
+      case '@cart/UPDATE_AMOUNT_SUCCESS':
+         return produce(state, draft => {
+            const hasProduct = draft.findIndex(
+               product => product.id === action.id
+            );
+            if (hasProduct >= 0) {
+               draft[hasProduct].amount = Number(action.amount);
+            }
          });
       default:
          return state;

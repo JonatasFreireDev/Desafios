@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
-
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Container } from '../../components/Container/styles';
 import {
    View,
    CartView,
    Button,
+   Products,
    Product,
    ProductImage,
    ProductDescription,
@@ -19,70 +21,97 @@ import {
    Text,
    TextButton,
    CheckoutButton,
+   IconEmpty,
+   ContainerEmpty,
 } from './styles';
+import * as CartActions from '../../store/Modules/Cart/actions';
+import { formatPrice } from '../../util/format';
 
-export default class Cart extends Component {
-   state = {
-      listProducts: [],
-   };
-
-   componentDidMount() {
-      const { listProducts } = this.state;
-      const { item } = this.props.navigation.state.params;
-
-      this.setState({ listProducts: [...listProducts, item] });
-      console.tron.log(this.state);
-      console.tron.log(item);
+function Cart({ products, removeFromCart, total, updateAmountRequest }) {
+   function increment(product) {
+      updateAmountRequest(product.id, product.amount + 1);
    }
 
-   static navigationOptions = {
-      title: 'Cart',
-   };
+   function decrement(product) {
+      updateAmountRequest(product.id, product.amount - 1);
+   }
 
-   render() {
-      return (
-         <Container>
-            <CartView>
+   return (
+      <Container>
+         <CartView>
+            {products.length >= 1 ? (
                <>
-                  <Product>
-                     <ProductImage
-                        source={{
-                           uri:
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQS9842RHuqv2efauljx_9OCXb4JKk9BzHFQrWfPohqzHyqtwj8',
-                        }}
-                     />
-                     <ProductDescription>
-                        <ProductName>aeeasdasdasdasdasdw</ProductName>
-                        <ProductPrice>aeew</ProductPrice>
-                     </ProductDescription>
-                     <Button>
-                        <ProductTrash />
-                     </Button>
-                  </Product>
-                  <ProductConf>
-                     <View>
-                        <Button>
-                           <ProductLess />
-                        </Button>
-                        <ProductItens>1</ProductItens>
-                        <Button>
-                           <ProductMore />
-                        </Button>
-                     </View>
-                     <View>
-                        <ProductPrice>6542</ProductPrice>
-                     </View>
-                  </ProductConf>
+                  <Products
+                     data={products}
+                     keyExtractor={item => item.id.toString()}
+                     renderItem={({ item }) => (
+                        <>
+                           <Product>
+                              <ProductImage
+                                 source={{
+                                    uri: item.image,
+                                 }}
+                              />
+                              <ProductDescription>
+                                 <ProductName>{item.title}</ProductName>
+                                 <ProductPrice>
+                                    {item.formatedValue}
+                                 </ProductPrice>
+                              </ProductDescription>
+                              <Button onPress={() => removeFromCart(item.id)}>
+                                 <ProductTrash />
+                              </Button>
+                           </Product>
+                           <ProductConf>
+                              <View>
+                                 <Button onPress={() => decrement(item)}>
+                                    <ProductLess />
+                                 </Button>
+                                 <ProductItens>{item.amount}</ProductItens>
+                                 <Button onPress={() => increment(item)}>
+                                    <ProductMore />
+                                 </Button>
+                              </View>
+                              <View>
+                                 <ProductPrice>{item.subtotal}</ProductPrice>
+                              </View>
+                           </ProductConf>
+                        </>
+                     )}
+                  />
+
+                  <Total>
+                     <Text>TOTAL</Text>
+                     <ProductPrice>{total}</ProductPrice>
+                  </Total>
+                  <CheckoutButton>
+                     <TextButton>FINALIZAR PEDIDO</TextButton>
+                  </CheckoutButton>
                </>
-               <Total>
-                  <Text>TOTAL</Text>
-                  <ProductPrice>1619,19</ProductPrice>
-               </Total>
-               <CheckoutButton>
-                  <TextButton>FINALIZAR PEDIDO</TextButton>
-               </CheckoutButton>
-            </CartView>
-         </Container>
-      );
-   }
+            ) : (
+               <ContainerEmpty>
+                  <IconEmpty />
+                  <Text style={{ fontSize: 20 }}>Carrinho Vazio</Text>
+               </ContainerEmpty>
+            )}
+         </CartView>
+      </Container>
+   );
 }
+
+const mapStateToProps = state => ({
+   products: state.cart.map(product => ({
+      ...product,
+      subtotal: formatPrice(product.price * product.amount),
+   })),
+   total: formatPrice(
+      state.cart.reduce((total, product) => {
+         return total + product.price * product.amount;
+      }, 0)
+   ),
+});
+
+const mapDispatchToProps = dispatch =>
+   bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, CartActions)(Cart);
