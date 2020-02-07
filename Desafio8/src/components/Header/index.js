@@ -1,10 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { TouchableOpacity, SafeAreaView } from 'react-native';
 import PropTypes from 'prop-types';
 import { Container, Logo, Icone, LogoButton, Dot } from './styles';
 
-function Header({ navigation, CartLength }) {
+export default function Header({ navigation }) {
+   const CartLength = useSelector(state => state.cart.length);
+
    return (
       <SafeAreaView>
          <Container>
@@ -34,9 +36,3 @@ Header.propTypes = {
       navigate: PropTypes.func,
    }).isRequired,
 };
-
-const mapStateToProps = state => ({
-   CartLength: state.cart.length,
-});
-
-export default connect(mapStateToProps)(Header);
