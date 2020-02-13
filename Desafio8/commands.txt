@@ -2,3 +2,9 @@ json-server server.json -p 3333 -w
 
 
 adb reverse tcp:9090 tcp:9090
+
+
+yarn start --reset-cache
+
+tive de remover o plugin @babel/plugin-proposal-class-properties, pois o mesmo simplesmente buga qnd se usa o FlatList
+tive de remover ele do babelrc, do package.json e limpar o cache para poder funcionar

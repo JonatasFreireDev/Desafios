@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import * as CartActions from '../../store/Modules/Cart/actions';
 import { Container } from '../../components/Container/styles';
 import {
@@ -27,12 +26,12 @@ export default function Home() {
    const [isLoading, setIsLoading] = useState(false);
    const [error, setError] = useState({ err: false, message: '' });
 
-   const amount = useSelector(state => {
-      state.cart.reduce((sumAmount, product) => {
-         sumAmount[product.id] = product.amount;
-         return sumAmount;
-      }, {});
-   });
+   const amount = useSelector(state =>
+      state.cart.reduce((amount, product) => {
+         amount[product.id] = product.amount;
+         return amount;
+      }, {})
+   );
 
    const dispatch = useDispatch();
 
@@ -85,9 +84,9 @@ export default function Home() {
          <Container>
             <List
                data={products}
-               keyExtractor={item => item.id}
+               keyExtractor={item => String(item.id)}
                renderItem={({ item }) => (
-                  <ContItem>
+                  <ContItem key={item.id}>
                      <Img source={{ uri: item.image }} />
                      <Texto>{item.title}</Texto>
                      <Texto style={{ fontWeight: 'bold' }}>
@@ -124,7 +123,3 @@ export default function Home() {
       return renderList();
    }
 }
-
-Home.propTypes = {
-   addToCartRequest: PropTypes.func.isRequired,
-};
